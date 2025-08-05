@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'blogapp',
     'musica',
     'eventos',
-    'noticias'
+    'noticias',
+    'auth_app'
 ]
 
 

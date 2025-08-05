@@ -39,6 +39,24 @@
                     <a class="nav-link disabled" aria-disabled="true">Disabled</a>
                   </li>
                 </ul>
+                <!-- Enlaces de autenticación -->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                  {% if user.is_authenticated %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">{{ user.username }}</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'auth:logout' %}">Cerrar sesión</a>
+                    </li>
+                  {% else %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'auth:login' %}">Iniciar sesión</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'auth:registro' %}">Registrarse</a>
+                    </li>
+                  {% endif %}
+                </ul>
               </div>
             </div>
           </nav>
