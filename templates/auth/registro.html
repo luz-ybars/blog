@@ -11,12 +11,20 @@
                 <div class="card-body">
                     {% if messages %}
                         {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }}">
-                                {{ message }}
-                            </div>
+                            <script>
+                                mostrarToast('{{ message }}', '{{ message.tags }}');
+                            </script>
                         {% endfor %}
                     {% endif %}
-                    
+                    <div class="alert alert-info">
+                        <h6><strong>Requisitos de contraseña:</strong></h6>
+                        <ul class="mb-0">
+                            <li>Mínimo 8 caracteres</li>
+                            <li>No puede ser muy común</li>
+                            <li>No puede ser completamente numérica</li>
+                            <li>No puede ser similar a tu nombre de usuario</li>
+                        </ul>
+                    </div>
                     <form method="post">
                         {% csrf_token %}
                         {% for field in form %}
