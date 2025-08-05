@@ -15,7 +15,7 @@ class Autor(models.Model):
       return self.nombre
 
 class Categoria(models.Model):
-   nombre = models.CharField(max_length=30)
+   nombre = models.CharField(max_length=300)
 
 
 class Post(models.Model):
@@ -58,7 +58,7 @@ def lista_noticias(request):
     query = request.GET.get('q')
     if query:
         noticias = Noticia.objects.filter(publicado=True).filter(
-            Q(titulo__icontains=query) | Q(contenido__icontains=query)
+            Q(titulo__icontains=query) | Q (contenido__icontains=query)
         ).distinct()
     else:
         noticias = Noticia.objects.filter(publicado=True)
