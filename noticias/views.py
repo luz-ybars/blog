@@ -37,11 +37,11 @@ def noticia_list(request):
 def lista_noticias(request):
     query = request.GET.get('q')
     if query:
-        noticias = Noticia.objects.filter(publicado=True).filter(
+        noticias = noticias.objects.filter(publicado=True).filter(
             Q(titulo__icontains=query) | Q (contenido__icontains=query)
         ).distinct()
     else:
-        noticias = Noticia.objects.filter(publicado=True)
+        noticias = noticias.objects.filter(publicado=True)
 
     # Novedades recientes 
     ultimas_novedades = Novedad.objects.filter(publicado=True).order_by('-fecha_publicacion')[:5]
@@ -49,8 +49,8 @@ def lista_noticias(request):
     # Artistas destacados 
     artistas_destacados = Artista.objects.all().order_by('nombre')[:10] 
 
-    categorias = Categoria.objects.all()
-    etiquetas = Etiqueta.objects.all()
+    categorias = categorias.objects.all()
+    etiquetas = etiquetas.objects.all()
 
     context = {
         'noticias': noticias,

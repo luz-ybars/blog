@@ -53,3 +53,6 @@ class Comentario(models.Model):
    def __str__(self):
     return f"{self.autor_comentario} - {self.contenido_comentario[:30]}"
    
+
+
+   
