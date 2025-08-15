@@ -67,3 +67,39 @@ def eliminar_comentario(request, comentario_id):
         return redirect('post_detalle', id=comentario.post.id)
     return render(request, 'eliminar_comentario.html', {'comentario': comentario})
 
+
+def contacto(request):
+    """
+    Muestra el formulario de contacto y procesa los datos enviados.
+    """
+    if request.method == 'POST':
+        form = ContactoForm(request.POST)
+        if form.is_valid():
+            # Obtiene los datos validados del formulario
+            nombre = form.cleaned_data['nombre']
+            email = form.cleaned_data['email']
+            asunto = form.cleaned_data['asunto']
+            mensaje = form.cleaned_data['mensaje']
+            
+            # Construye el cuerpo del correo electrónico
+            cuerpo_mensaje = f"Nombre: {nombre}\nEmail: {email}\n\nAsunto: {asunto}\n\nMensaje:\n{mensaje}"
+            
+            try:
+                # Envía el correo electrónico
+                send_mail(
+                    asunto, # Asunto del correo
+                    cuerpo_mensaje, # Cuerpo del mensaje
+                    settings.EMAIL_HOST_USER, # Correo electrónico del remitente (definido en settings.py)
+                    ['tucorreo@ejemplo.com'], # Lista de correos electrónicos de los destinatarios
+                    fail_silently=False,
+                )
+                messages.success(request, 'Tu mensaje ha sido enviado con éxito.')
+                return redirect('contacto')
+            except Exception as e:
+                messages.error(request, 'Hubo un error al enviar tu mensaje. Inténtalo de nuevo más tarde.')
+                print(f"Error al enviar correo: {e}")
+    else:
+        form = ContactoForm()
+        
+    return render(request, 'contacto.html', {'form': form})
+
