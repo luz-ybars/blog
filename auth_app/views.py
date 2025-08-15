@@ -1,18 +1,27 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import Group
+from django.conf import settings
+from .forms import RegistroForm
 
 def registro(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = RegistroForm(request.POST)
         if form.is_valid():
             try:
                 password = form.cleaned_data.get('password1')
                 validate_password(password)
                 user = form.save()
+                invite_code = form.cleaned_data.get('invite_code')
+                if invite_code and settings.COLAB_INVITE_CODE and invite_code == settings.COLAB_INVITE_CODE:
+                    group, _ = Group.objects.get_or_create(name="Colaborador")
+                else:
+                    group, _ = Group.objects.get_or_create(name="Miembro")
+                user.groups.add(group)
                 login(request, user)
                 messages.success(request, f'¡Bienvenido {user.username}! Tu cuenta ha sido creada exitosamente.')
                 return redirect('home')
@@ -29,7 +38,7 @@ def registro(request):
             else:
                 messages.error(request, 'Error en el registro. Verifica los datos ingresados.')
     else:
-        form = UserCreationForm()
+        form = RegistroForm()
     return render(request, 'auth/registro.html', {'form': form})
 
 def login_view(request):

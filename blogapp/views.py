@@ -14,7 +14,7 @@ def posts(request):
 def postdetalle(request, id):
   try:
     data = Post.objects.get(id=id)
-    comentarios = Comentario.objects.all()
+    comentarios = Comentario.objects.filter(post=data)
   except Post.DoesNotExist:
     raise Http404('El Post seleccionado no existe')
 
