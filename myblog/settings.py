@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms', 
+    'crispy_bootstrap5',
     'blogapp',
     'musica',
     'eventos',
@@ -145,3 +146,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'uuuu@gmail.com' 
 EMAIL_HOST_PASSWORD = 'oken_de_app'
+
+# The CRISPY_TEMPLATE_PACK setting tells crispy forms which CSS framework to use.
+# It is required when using the '|crispy' filter in templates.
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+

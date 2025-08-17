@@ -6,6 +6,7 @@ from django.core.paginator import Paginator, EmptyPage
 from django.core.mail import send_mail 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def home(request):
@@ -19,8 +20,7 @@ def posts(request):
 def about(request):
   return render(request, "about.html")
 
-def contacto(request):
-  return render(request, "contacto.html")
+# Eliminado: definición duplicada de la vista contacto
 
 
 def post_detalle(request, id):
@@ -61,7 +61,7 @@ def post_detalle(request, id):
         'comentarios': comentarios,
         'form': form
     }
-    return render(request, 'detalle_post.html', context) 
+    return render(request, 'post_detalle.html', context) 
 
 def eliminar_comentario(request, comentario_id):
     comentario = get_object_or_404(Comentario, id=comentario_id)
@@ -105,4 +105,27 @@ def contacto(request):
         
     return render(request, 'contacto.html', {'form': form})
 
+
+
+@login_required # Importante: asegura que solo usuarios autenticados puedan comentar
+def nuevo_comentario(request, post_id):
+    """
+    Maneja la creación de un nuevo comentario para un post.
+    """
+    post = get_object_or_404(Post, pk=post_id)
+    if request.method == 'POST':
+        form = ComentarioForm(request.POST)
+        if form.is_valid():
+            # No guardamos el formulario directamente.
+            # Creamos una instancia del modelo pero no la guardamos todavía.
+            comentario = form.save(commit=False)
+            comentario.autor_comentario = request.user
+            comentario.post = post
+            
+            
+            comentario.save()
+            return redirect('post_detalle', id=post.id)
+    else:
+      
+        return redirect('post_detalle', id=post.id)
 

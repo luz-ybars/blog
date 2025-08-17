@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ post.titulo }}{% endblock %}
+
+{% block contenido %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <!-- Sección del Post -->
+            <article class="post-detail-card card shadow-sm p-4 mb-5">
+                <div class="post-header text-center mb-4">
+                    <h1 class="post-title">{{ post.titulo }}</h1>
+                    <p class="post-meta text-muted">
+                        Publicado el {{ post.fch_publicacion|date:"F j, Y" }} por 
+                        <span class="fw-bold">{{ post.autor.get_full_name|default:post.autor }}</span>
+                    </p>
+                </div>
+                <div class="post-body">
+                    <p>{{ post.contenido|safe }}</p>
+                </div>
+            </article>
+
+            <!-- Sección de Comentarios -->
+            <section class="comments-section">
+                <h2 class="mb-4">Comentarios ({{ comentarios.count }})</h2>
+                {% if comentarios %}
+                    <ul class="list-group mb-5">
+                        {% for comentario in comentarios %}
+                        <li class="list-group-item d-flex justify-content-between align-items-start border-0 border-bottom p-3">
+                            <div>
+                                <h5 class="autor_comentario mb-1"> {{ autor.comentario.get_full_name|default:autor.comentario}} </h5>
+                                <p class="comentario-content mb-1">{{ comentario.contenido_comentario }}</p>
+                                <small class="text-muted">hace {{ comentario.fch_creacion_comentario|timesince }}</small>
+                            </div>
+                            <!-- Opcional: Botón para eliminar comentario (ejemplo) -->
+                            {% if request.user == autor.comentario %}
+                                <a href="{% url 'eliminar_comentario' comentario.pk %}" class="btn btn-sm btn-danger ms-2" title="Eliminar Comentario">
+                                    &times;
+                                </a>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">No hay comentarios aún. ¡Sé el primero en comentar!</p>
+                {% endif %}
+            </section>
+
+            <!-- Sección del Formulario de Comentarios -->
+            <section class="comment-form-section">
+                <h2 class="mb-4">Deja un comentario</h2>
+                <div class="card p-4">
+                    <form method="post" action="{% url 'post_detalle' post.pk %}">
+                        {% csrf_token %}
+                        <!-- Renderiza el formulario de comentario -->
+                        {{ form|crispy }}
+                        <div class="d-grid mt-3">
+                            <button type="submit" class="btn btn-primary">Comentar</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+

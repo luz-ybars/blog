@@ -36,7 +36,7 @@ class Post(models.Model):
 
 class Comentario(models.Model):
    #autor_comentario=models.Charfield(max_lenght=60)
-   autor_comentario = models.ForeignKey(User, on_delete=models.CASCADE)
+   autor_comentario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
    contenido_comentario = models.TextField()
    fch_creacion_comentario = models.DateTimeField(default=timezone.now)
    post = models.ForeignKey("Post",related_name="comentarios", on_delete=models.CASCADE)
