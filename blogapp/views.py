@@ -5,7 +5,6 @@ from .forms import ComentarioForm, ContactoForm
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
-
 # Create your views here.
 def home(request):
   posts=Post.objects.all().order_by('fch_publicacion')
@@ -49,40 +48,31 @@ def post_detalle(request, id):
     Muestra los detalles de un post específico, sus comentarios y maneja el formulario
     para nuevos comentarios.
     """
-   
-    post = get_object_or_404(Post.objects.select_related('autor'), pk=id)
-    
-    
+    post = get_object_or_404(Post, pk=id)
     comentarios = Comentario.objects.filter(post=post).order_by('-fch_creacion_comentario')
-    
-    
+
     if request.method == 'POST':
-       
         form = ComentarioForm(request.POST)
         if form.is_valid():
-            
             nuevo_comentario = form.save(commit=False)
             nuevo_comentario.post = post
-            
-            
             if request.user.is_authenticated:
                 nuevo_comentario.autor_comentario = request.user
-                nuevo_comentario.save() 
-
-                return redirect('post_detalle', id=post.id)
+                nuevo_comentario.save()
             else:
-                
-                pass
+                messages.error(request, 'Debes iniciar sesión para comentar.')
+                return redirect('auth:login')
+            messages.success(request, 'Tu comentario ha sido enviado con éxito.')
+            return redirect('post_detalle', id=post.id)
     else:
-    
         form = ComentarioForm()
 
-    context = {
+    return render(request, 'post_detalle.html', {
         'post': post,
         'comentarios': comentarios,
         'form': form
-    }
-    return render(request, 'detalle_post.html', context) 
+    })
+
 
 def postdetalle(request, id):
     return post_detalle(request, id)

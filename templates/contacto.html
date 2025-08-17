@@ -1,27 +1,26 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block contenido %}
 <div class="container py-4">
-  <h1>Contacto</h1>
-  <form method="post" class="mt-3">
-    {% csrf_token %}
-    <div class="mb-3">
-      <label class="form-label">Nombre</label>
-      {{ form.nombre }}
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h1 class="h3 mb-3">Contacto</h1>
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+          <form method="post" class="mt-2">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-primary">Enviar</button>
+          </form>
+        </div>
+      </div>
     </div>
-    <div class="mb-3">
-      <label class="form-label">Email</label>
-      {{ form.email }}
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Asunto</label>
-      {{ form.asunto }}
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Mensaje</label>
-      {{ form.mensaje }}
-    </div>
-    <button type="submit" class="btn btn-primary">Enviar</button>
-  </form>
+  </div>
 </div>
 {% endblock %}
 

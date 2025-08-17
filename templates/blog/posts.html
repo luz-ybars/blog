@@ -13,8 +13,8 @@
               <p>{{post.autor}}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
+                  <a href="{% url 'post_detalle' id=post.id %}" class="btn btn-sm btn-outline-secondary">Comentar</a>
                   <a href="{% url 'post_detalle' id=post.id %}" class="btn btn-sm btn-outline-secondary">Ver más</a>
-                  <a class="btn btn-sm btn-outline-secondary">Comentar</a>
                 </div>
                 <small class="text-muted">{{ post.fch_publicacion|date:"d/m/Y H:i" }}</small>
               </div>
@@ -25,3 +25,4 @@
   </div>
 </div>
 {% endblock%}
+
