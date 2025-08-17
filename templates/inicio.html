@@ -1,0 +1,333 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenido %}
+<!-- Hero -->
+<section class="hero">
+  <h2>Bienvenidos al blog donde la música nunca se detiene</h2>
+  <p>Explorá géneros, descubrí artistas y compartí tu pasión con otros fanáticos.</p>
+</section>
+
+<!-- Secciones -->
+<section class="container">
+  <div class="card">
+    <h3>🎸 Tipos de Música</h3>
+    <p>Rock, pop, rap, electrónica, cumbia y más.</p>
+  </div>
+  <div class="card">
+    <h3>🧑‍🎤 Artistas</h3>
+    <p>Biografías, discografía y entrevistas exclusivas.</p>
+  </div>
+  <div class="card">
+    <h3>🆕 Novedades</h3>
+    <p>Lanzamientos recientes, festivales y noticias del mundo musical.</p>
+  </div>
+  
+  <div class="card">
+    <h3>🎫 Entradas</h3>
+    <p>Conseguí acceso a conciertos y festivales antes que nadie.</p>
+  </div>
+</section>
+
+<!-- Extras -->
+<section class="extras">
+  <h2>💬 Zona de fans</h2>
+  <p>Foros y chats por tipo de artista. Compartí, opiná y conocé a otros fans.</p>
+</section>
+
+<!-- Chat General -->
+<section class="chat">
+  <h2>📢 Chat General</h2>
+  <p>Un espacio libre para hablar de música con la comunidad.</p>
+</section>
+{% endblock %}
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mi Blog{% endblock %}</title>
+    <!-- Incluye Bootstrap u otro framework CSS para estilizar -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Puedes añadir tu propio archivo de estilos CSS aquí -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <!-- Menú de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">Mi Blog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'posts_list' %}">Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contacto' %}">Contacto</a>
+                    </li>
+                </ul>
+                <!-- Enlaces de autenticación -->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                  {% if user.is_authenticated %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">{{ user.username }}</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#" onclick="confirmarLogout()">Cerrar sesión</a>
+                    </li>
+                  {% else %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'auth:login' %}">Iniciar sesión</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'auth:registro' %}">Registrarse</a>
+                    </li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+          </nav>
+  </header>
+  <div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido dinámico de la página -->
+    <main class="py-4">
+        <div class="container">
+            {% block contenido %}
+            <!-- El contenido específico de cada página se insertará aquí -->
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="bg-light text-center text-lg-start mt-auto">
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            © 2025 Mi Blog. Todos los derechos reservados.
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+ <script>
+    function confirmarLogout() {
+        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+            window.location.href = "{% url 'auth:logout' %}";
+        }
+    }
+
+    function mostrarToast(mensaje, tipo) {
+        const toastContainer = document.getElementById('toast-container');
+        const toastId = 'toast-' + Date.now();
+        
+        const toastHtml = `
+            <div id="${toastId}" class="toast align-items-center text-white bg-${tipo} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        ${mensaje}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        `;
+        
+        toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+        
+        const toastElement = document.getElementById(toastId);
+        const toast = new bootstrap.Toast(toastElement, {
+            autohide: true,
+            delay: 4000
+        });
+        
+        toast.show();
+        
+        toastElement.addEventListener('hidden.bs.toast', function() {
+            toastElement.remove();
+        });
+    }
+
+    </script>
+    
+    {% if messages %}
+        <script>
+        {% for message in messages %}
+            mostrarToast('{{ message }}', '{{ message.tags }}');
+        {% endfor %}
+        </script>
+    {% endif %}
+
+</body>
+</html>
+
+
+
+<¡ el original !> 
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina de Inicio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'musica/style.css' %}">
+</head>
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg bg-gradient">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">Mi blog de musica</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Inicio</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'posts' %}">Artículos</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Dropdown
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#">Action</a></li>
+                      <li><a class="dropdown-item" href="#">Another action</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                  </li>
+                </ul>
+                <!-- Enlaces de autenticación -->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                  {% if user.is_authenticated %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">{{ user.username }}</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#" onclick="confirmarLogout()">Cerrar sesión</a>
+                    </li>
+                  {% else %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'auth:login' %}">Iniciar sesión</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'auth:registro' %}">Registrarse</a>
+                    </li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+          </nav>
+  </header>
+  <div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+  </div>
+  <main>
+     {% block contenido %}
+     
+     {% endblock %}
+  </main>
+  <footer class="container">
+        <p class="float-end"><a href="#">Arriba</a></p>
+        <p>© 2017–2024 Company, Inc. · <a href="#">Privacy</a> · <a href="#">Terms</a></p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script>
+    function confirmarLogout() {
+        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+            window.location.href = "{% url 'auth:logout' %}";
+        }
+    }
+
+    function mostrarToast(mensaje, tipo) {
+        const toastContainer = document.getElementById('toast-container');
+        const toastId = 'toast-' + Date.now();
+        
+        const toastHtml = `
+            <div id="${toastId}" class="toast align-items-center text-white bg-${tipo} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        ${mensaje}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        `;
+        
+        toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+        
+        const toastElement = document.getElementById(toastId);
+        const toast = new bootstrap.Toast(toastElement, {
+            autohide: true,
+            delay: 4000
+        });
+        
+        toast.show();
+        
+        toastElement.addEventListener('hidden.bs.toast', function() {
+            toastElement.remove();
+        });
+    }
+
+    </script>
+    
+    {% if messages %}
+        <script>
+        {% for message in messages %}
+            mostrarToast('{{ message }}', '{{ message.tags }}');
+        {% endfor %}
+        </script>
+    {% endif %}
+    </body>
+    </html>
+
+
+
+urls 
+from django.contrib import admin
+from django.urls import path, include
+from blogapp import views
+
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    
+    # Blogapp con prefijo /blog/
+    path('blog/', views.home, name='home'),
+    path('blog/posts', views.posts, name='posts'),
+    path('blog/post-detalle/<int:id>/', views.post_detalle, name='post_detalle'), 
+    #path('blog/nuevo-post/', views.nuevo_post, name='nuevo_post'),
+    #path('blog/editar-post/<int:id>/', views.editar_post, name='editar_post'),
+    #path('blog/eliminar-post/<int:id>/', views.eliminar_post, name='eliminar_post'),
+    #path('blog/comentario/<int:post_id>/', views.comentario, name='comentario'),
+    #path('blog/nuevo-comentario/<int:post_id>/', views.nuevo_comentario, name='nuevo_comentario'),
+    #path('blog/editar-comentario/<int:comentario_id>/', views.editar_comentario, name='editar_comentario'),
+    path('auth/', include('auth_app.urls')),
+    path('about/', views.about, name='about'),
+    path('contacto/', views.contacto, name='contacto'),
+
+    # Eliminar comentario
+    path('eliminar-comentario/<int:comentario_id>/',views.eliminar_comentario, name='eliminar_comentario'),
+]

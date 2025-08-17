@@ -1,8 +1,11 @@
 from django.shortcuts import render,  get_object_or_404, redirect
 from django.http import HttpResponse, Http404
 from .models import Post, Comentario
-from .forms import ComentarioForm
+from .forms import ComentarioForm, ContactoForm 
 from django.core.paginator import Paginator, EmptyPage
+from django.core.mail import send_mail 
+from django.conf import settings
+from django.contrib import messages
 
 # Create your views here.
 def home(request):
@@ -75,22 +78,21 @@ def contacto(request):
     if request.method == 'POST':
         form = ContactoForm(request.POST)
         if form.is_valid():
-            # Obtiene los datos validados del formulario
+            
             nombre = form.cleaned_data['nombre']
             email = form.cleaned_data['email']
             asunto = form.cleaned_data['asunto']
             mensaje = form.cleaned_data['mensaje']
             
-            # Construye el cuerpo del correo electrónico
+        
             cuerpo_mensaje = f"Nombre: {nombre}\nEmail: {email}\n\nAsunto: {asunto}\n\nMensaje:\n{mensaje}"
             
             try:
-                # Envía el correo electrónico
                 send_mail(
-                    asunto, # Asunto del correo
-                    cuerpo_mensaje, # Cuerpo del mensaje
-                    settings.EMAIL_HOST_USER, # Correo electrónico del remitente (definido en settings.py)
-                    ['tucorreo@ejemplo.com'], # Lista de correos electrónicos de los destinatarios
+                    asunto, 
+                    cuerpo_mensaje, 
+                    settings.EMAIL_HOST_USER, 
+                    ['tucorreo@ejemplo.com'], 
                     fail_silently=False,
                 )
                 messages.success(request, 'Tu mensaje ha sido enviado con éxito.')
@@ -102,4 +104,5 @@ def contacto(request):
         form = ContactoForm()
         
     return render(request, 'contacto.html', {'form': form})
+
 
