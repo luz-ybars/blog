@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth.models import User
 # Create your views here.
 def home(request):
   posts=Post.objects.all().order_by('fch_publicacion')
@@ -20,7 +20,6 @@ def posts(request):
 def about(request):
   return render(request, "about.html")
 
-# Eliminado: definición duplicada de la vista contacto
 
 
 def post_detalle(request, id):
@@ -28,40 +27,40 @@ def post_detalle(request, id):
     Muestra los detalles de un post específico, sus comentarios y maneja el formulario
     para nuevos comentarios.
     """
-   
-    post = get_object_or_404(Post.objects.select_related('autor'), pk=id)
-    
-    
+    post = get_object_or_404(Post, pk=id)
     comentarios = Comentario.objects.filter(post=post).order_by('-fch_creacion_comentario')
-    
-    
+
     if request.method == 'POST':
-       
         form = ComentarioForm(request.POST)
         if form.is_valid():
-            
+            # Crea una instancia del comentario pero no la guarda aún
             nuevo_comentario = form.save(commit=False)
+            
+            # Asigna el post al comentario
             nuevo_comentario.post = post
             
-            
+            # Verifica si el usuario está autenticado y asigna el autor
             if request.user.is_authenticated:
-                nuevo_comentario.autor_comentario = request.user
-                nuevo_comentario.save() 
-
-                return redirect('post_detalle', id=post.id)
+                nuevo_comentario.autor = request.user
             else:
-                
-                pass
+                # Si el usuario no está autenticado, puedes manejar esto de otra forma,
+                # por ejemplo, redirigiendo al login.
+                messages.error(request, 'Debes iniciar sesión para comentar.')
+                return redirect('auth_app:login')
+
+            # Ahora sí, guarda el comentario en la base de datos
+            nuevo_comentario.save()
+            messages.success(request, 'Tu comentario ha sido enviado con éxito.')
+            return redirect('post_detalle', id=post.id)
     else:
-    
         form = ComentarioForm()
 
-    context = {
+    return render(request, 'post_detalle.html', {
         'post': post,
         'comentarios': comentarios,
         'form': form
-    }
-    return render(request, 'post_detalle.html', context) 
+    })
+
 
 def eliminar_comentario(request, comentario_id):
     comentario = get_object_or_404(Comentario, id=comentario_id)

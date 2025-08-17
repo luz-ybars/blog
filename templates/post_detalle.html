@@ -30,12 +30,13 @@
                         {% for comentario in comentarios %}
                         <li class="list-group-item d-flex justify-content-between align-items-start border-0 border-bottom p-3">
                             <div>
-                                <h5 class="autor_comentario mb-1"> {{ autor.comentario.get_full_name|default:autor.comentario}} </h5>
+                                <!-- ¡CORRECCIÓN AQUÍ! Ahora se usa 'comentario.autor' -->
+                                <h5 class="autor_comentario mb-1">{{ comentario.autor.get_full_name|default:comentario.autor }}</h5>
                                 <p class="comentario-content mb-1">{{ comentario.contenido_comentario }}</p>
-                                <small class="text-muted">hace {{ comentario.fch_creacion_comentario|timesince }}</small>
+                                <small class="text-muted"> {{ comentario.fch_creacion_comentario|timesince }}</small>
                             </div>
-                            <!-- Opcional: Botón para eliminar comentario (ejemplo) -->
-                            {% if request.user == autor.comentario %}
+                            <!-- ¡Y CORRECCIÓN AQUÍ! Se usa 'comentario.autor' para la comparación -->
+                            {% if request.user == comentario.autor %}
                                 <a href="{% url 'eliminar_comentario' comentario.pk %}" class="btn btn-sm btn-danger ms-2" title="Eliminar Comentario">
                                     &times;
                                 </a>
@@ -67,7 +68,5 @@
     </div>
 </div>
 {% endblock %}
-
-
-
+ 
 
