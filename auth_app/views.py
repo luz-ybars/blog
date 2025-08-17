@@ -17,7 +17,8 @@ def registro(request):
                 validate_password(password)
                 user = form.save()
                 invite_code = form.cleaned_data.get('invite_code')
-                if invite_code and settings.COLAB_INVITE_CODE and invite_code == settings.COLAB_INVITE_CODE:
+                invite_target = getattr(settings, 'COLAB_INVITE_CODE', '')
+                if invite_code and invite_target and invite_code == invite_target:
                     group, _ = Group.objects.get_or_create(name="Colaborador")
                 else:
                     group, _ = Group.objects.get_or_create(name="Miembro")
