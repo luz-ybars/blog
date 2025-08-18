@@ -5,9 +5,15 @@ from blogapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     
-    # Blogapp con prefijo /blog/
-    path('', include('blogapp.urls')),
-     path('auth/', include('auth_app.urls')),
+    # Blogapp
+    path('blog/', views.home, name='home'),
+    path('blog/posts', views.posts, name='posts'),
+    path('blog/post-detalle/<int:id>/', views.post_detalle, name='post_detalle'),
+    path('blog/post-detalle/<int:id>', views.postdetalle, name='postdetalle'),
+    # Auth
+    path('auth/', include('auth_app.urls')),
+    # Raíz principal a música (como estaba)
+    path('', include('musica.urls')),
     path('about/', views.about, name='about'),
     path('contacto/', views.contacto, name='contacto'),
     path('eliminar-comentario/<int:comentario_id>/',views.eliminar_comentario, name='eliminar_comentario'),

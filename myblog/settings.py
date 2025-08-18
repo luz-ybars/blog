@@ -13,9 +13,13 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 import sys
+<<<<<<< HEAD
 from dotenv import load_dotenv 
 
 load_dotenv() 
+=======
+from os import getenv
+>>>>>>> b29bf67b2f8f20518ea030da1eb876380e8c4f45
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 #BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crispy_forms', 
+    'crispy_forms',
     'crispy_bootstrap5',
     'blogapp',
     'musica',
@@ -131,11 +135,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-#STATICFILES_DIRS = ('/ruta/static',)  
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 
 MEDIA = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
+# Email (desarrollo)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST', '')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587')) if os.getenv('EMAIL_PORT') else None
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

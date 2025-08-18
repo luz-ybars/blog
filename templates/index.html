@@ -1,42 +1,32 @@
-{% extends "base.html" %} 
-{% load static %} 
-{% block contenido %} 
-
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acerca de Nosotros</title>
-    </head>
-<body>
-    <header>
-        <h1>Acerca de Nuestro Blog</h1>
-        <nav>
-            <ul>
-                <li><a href="/Artistas/">Artistas</a></li>
-                 <li><a href="/Ultimas novedades/">Ultimas novedades</a></li>
-                  <li><a href="/Eventos/">Eventos</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main>
-        <section>
-            <h2>Nuestra Misión</h2>
-            <p>Somos un blog dedicado a compartir conocimientos y experiencias sobre los distintos tipos musicales y artistas que lo representan. Creemos en crear un espacio para todos los fanaticos que sea divertido y accesible para todos.</p>
-        </section>
-
-        <section>
-            <h2>¿Quiénes Somos?</h2>
-            <p>Un equipo de entusiastas de fanaticos apasionados por la musica.</p>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2025 MiBlogDjango. Todos los derechos reservados.</p>
-    </footer>
-</body>
-</html>
- {% endblock %} 
- 
+{% extends "base.html" %}
+{% block contenido %}
+<div class="container py-4">
+  <div class="row">
+    {% for post in posts %}
+      <div class="col-12 col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">{{ post.titulo }}</h5>
+            <p class="card-text">{{ post.contenido|truncatechars:140 }}</p>
+            <a href="{% url 'post_detalle' id=post.id %}" class="btn btn-primary btn-sm">Leer más</a>
+          </div>
+          <div class="card-footer text-muted">
+            Publicado: {{ post.fch_publicacion|date:"d/m/Y H:i" }}
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12"><p>No hay artículos todavía.</p></div>
+    {% endfor %}
+  </div>
+  <div class="text-center py-3">
+    <a href="{% url 'posts' %}" class="btn btn-outline-secondary">Ver todos los artículos</a>
+  </div>
+  
+  <section class="mt-5">
+    <h2>Acerca de este blog</h2>
+    <p>Somos un blog musical creado en Informatorio. Encontrá artículos, artistas y novedades.</p>
+  </section>
+</div>
+{% endblock %}
  
