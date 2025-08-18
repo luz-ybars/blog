@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 import sys
+from dotenv import load_dotenv 
+
+load_dotenv() 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 #BASE_DIR = Path(__file__).resolve().parent.parent
@@ -144,10 +147,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'uuuu@gmail.com' 
-EMAIL_HOST_PASSWORD = 'oken_de_app'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
 
 # The CRISPY_TEMPLATE_PACK setting tells crispy forms which CSS framework to use.
 # It is required when using the '|crispy' filter in templates.
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
 
