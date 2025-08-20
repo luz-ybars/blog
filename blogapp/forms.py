@@ -1,5 +1,5 @@
 from django import forms
-from .models import Comentario
+from .models import Comentario, Post, Categoria
 
 class ComentarioForm(forms.ModelForm):
     class Meta:
@@ -17,5 +17,19 @@ class ContactoForm(forms.Form):
     asunto = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control'}))
     mensaje = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}))
 
-    
+class PostForm(forms.ModelForm):
+    categorias = forms.ModelMultipleChoiceField(
+        queryset=Categoria.objects.all(),
+        required=False,
+        widget=forms.SelectMultiple(attrs={'class': 'form-select'})
+    )
+
+    class Meta:
+        model = Post
+        fields = ['titulo', 'contenido', 'imagen', 'categorias']
+        widgets = {
+            'titulo': forms.TextInput(attrs={'class': 'form-control'}),
+            'contenido': forms.Textarea(attrs={'class': 'form-control', 'rows': 8}),
+            'imagen': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
 

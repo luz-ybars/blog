@@ -1,20 +1,141 @@
 {% extends "base.html" %}
+{% load colab_tags %}
 {% block contenido %}
 <div class="container py-4">
-  <h1 class="mb-4">Artículos</h1>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Artículos</h1>
+    {% if user|es_colaborador %}
+      <a class="btn btn-primary" href="{% url 'post_crear' %}">Nuevo artículo</a>
+    {% endif %}
+  </div>
+
+  <!-- Filtros -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Filtrar Artículos</h5>
+    </div>
+    <div class="card-body">
+      <form method="get" class="row g-3">
+        <!-- Filtro por Categoría -->
+        <div class="col-md-6">
+          <label for="categoria" class="form-label">Categoría</label>
+          <select name="categoria" id="categoria" class="form-select">
+            <option value="">Todas las categorías</option>
+            {% for categoria in categorias %}
+              <option value="{{ categoria.id }}" 
+                {% if categoria_seleccionada == categoria.id|stringformat:"s" %}selected{% endif %}>
+                {{ categoria.nombre }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        
+        <!-- Filtro por Orden -->
+        <div class="col-md-6">
+          <label for="orden" class="form-label">Ordenar por</label>
+          <select name="orden" id="orden" class="form-select">
+            <option value="fecha_desc" {% if orden_seleccionado == 'fecha_desc' %}selected{% endif %}>
+              Fecha (más recientes primero)
+            </option>
+            <option value="fecha_asc" {% if orden_seleccionado == 'fecha_asc' %}selected{% endif %}>
+              Fecha (más antiguos primero)
+            </option>
+            <option value="titulo_asc" {% if orden_seleccionado == 'titulo_asc' %}selected{% endif %}>
+              Título (A-Z)
+            </option>
+            <option value="titulo_desc" {% if orden_seleccionado == 'titulo_desc' %}selected{% endif %}>
+              Título (Z-A)
+            </option>
+          </select>
+        </div>
+        
+        <!-- Botones -->
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary me-2">
+            <i class="fas fa-search me-1"></i>Aplicar Filtros
+          </button>
+          <a href="{% url 'posts' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-times me-1"></i>Limpiar Filtros
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Indicadores de filtros activos -->
+  {% if categoria_seleccionada or orden_seleccionado != 'fecha_desc' %}
+  <div class="mb-3">
+    <h6 class="text-muted">Filtros activos:</h6>
+    {% if categoria_seleccionada %}
+      {% for categoria in categorias %}
+        {% if categoria.id|stringformat:"s" == categoria_seleccionada %}
+          <span class="badge bg-primary me-2">
+            <i class="fas fa-tag me-1"></i>{{ categoria.nombre }}
+          </span>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    {% if orden_seleccionado == 'fecha_asc' %}
+      <span class="badge bg-info me-2">
+        <i class="fas fa-sort-amount-up me-1"></i>Más antiguos primero
+      </span>
+    {% elif orden_seleccionado == 'titulo_asc' %}
+      <span class="badge bg-info me-2">
+        <i class="fas fa-sort-alpha-down me-1"></i>A-Z
+      </span>
+    {% elif orden_seleccionado == 'titulo_desc' %}
+      <span class="badge bg-info me-2">
+        <i class="fas fa-sort-alpha-up me-1"></i>Z-A
+      </span>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <!-- Contador de resultados -->
+  <div class="mb-3">
+    <p class="text-muted">
+      <i class="fas fa-newspaper me-1"></i>
+      Mostrando {{ posts|length }} artículo{{ posts|length|pluralize }}
+      {% if categoria_seleccionada %}
+        {% for categoria in categorias %}
+          {% if categoria.id|stringformat:"s" == categoria_seleccionada %}
+            en la categoría "{{ categoria.nombre }}"
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </p>
+  </div>
+
+  <!-- Lista de artículos -->
+  {% if posts %}
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
     {% for post in posts%}
       <div class="col">
           <div class="card shadow-sm">
+            {% if post.imagen %}
+            <img src="{{ post.imagen.url }}" class="card-img-top" style="height:225px;object-fit:cover;" alt="{{ post.titulo }}">
+            {% else %}
             <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-            <div class="card-body">
-              <h5 class="card-title">{{ post.titulo }}</h5>
-              <p class="card-text">{{ post.contenido|truncatechars:120 }}</p>
-              <p>{{post.autor}}</p>
+            {% endif %}
+                      <div class="card-body">
+            <h5 class="card-title">{{ post.titulo }}</h5>
+            <p class="card-text">{{ post.contenido|truncatechars:120 }}</p>
+            <p><small class="text-muted">Por {{post.autor}}</small></p>
+            {% if post.categorias.all %}
+            <div class="mb-2">
+              {% for categoria in post.categorias.all %}
+                <span class="badge bg-secondary me-1">{{ categoria.nombre }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
+                  <a href="{% url 'post_detalle' id=post.id %}" class="btn btn-sm btn-outline-secondary">Ver</a>
                   <a href="{% url 'post_detalle' id=post.id %}" class="btn btn-sm btn-outline-secondary">Comentar</a>
-                  <a href="{% url 'post_detalle' id=post.id %}" class="btn btn-sm btn-outline-secondary">Ver más</a>
+                  {% if user|es_colaborador %}
+                  <a href="{% url 'post_editar' post.id %}" class="btn btn-sm btn-warning">Editar</a>
+                  <a href="{% url 'post_eliminar' post.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                  {% endif %}
                 </div>
                 <small class="text-muted">{{ post.fch_publicacion|date:"d/m/Y H:i" }}</small>
               </div>
@@ -23,6 +144,25 @@
         </div>
     {% endfor %}
   </div>
+  {% else %}
+  <!-- Mensaje cuando no hay artículos -->
+  <div class="text-center py-5">
+    <div class="mb-4">
+      <i class="fas fa-newspaper text-muted" style="font-size: 4rem;"></i>
+    </div>
+    <h3 class="text-muted mb-3">No se encontraron artículos</h3>
+    <p class="text-muted mb-4">
+      {% if categoria_seleccionada %}
+        No hay artículos en la categoría seleccionada.
+      {% else %}
+        Aún no hay artículos publicados.
+      {% endif %}
+    </p>
+    <a href="{% url 'posts' %}" class="btn btn-outline-primary">
+      <i class="fas fa-refresh me-1"></i>Ver todos los artículos
+    </a>
+  </div>
+  {% endif %}
 </div>
 {% endblock%}
 

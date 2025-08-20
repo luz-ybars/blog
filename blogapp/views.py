@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404
-from .models import Post, Comentario
-from .forms import ComentarioForm, ContactoForm
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from .models import Post, Comentario, Autor, Categoria
+from .forms import ComentarioForm, ContactoForm, PostForm
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
@@ -11,8 +13,39 @@ def home(request):
   return render(request, "index.html",{'posts':posts} )
 
 def posts(request):
-  posts=Post.objects.all().order_by('fch_publicacion')
-  return render(request, "posts.html",{'posts':posts})
+    # Obtener todos los posts inicialmente
+    posts = Post.objects.all()
+    
+    # Obtener todas las categorías para el filtro
+    categorias = Categoria.objects.all()
+    
+    # Filtrar por categoría si se especifica
+    categoria_id = request.GET.get('categoria')
+    if categoria_id:
+        posts = posts.filter(categorias__id=categoria_id)
+    
+    # Filtrar por orden
+    orden = request.GET.get('orden', 'fecha_desc')  # Por defecto más recientes primero
+    
+    if orden == 'fecha_asc':
+        posts = posts.order_by('fch_publicacion')
+    elif orden == 'fecha_desc':
+        posts = posts.order_by('-fch_publicacion')
+    elif orden == 'titulo_asc':
+        posts = posts.order_by('titulo')
+    elif orden == 'titulo_desc':
+        posts = posts.order_by('-titulo')
+    else:
+        posts = posts.order_by('-fch_publicacion')
+    
+    context = {
+        'posts': posts,
+        'categorias': categorias,
+        'categoria_seleccionada': categoria_id,
+        'orden_seleccionado': orden
+    }
+    
+    return render(request, "blog/posts.html", context)
 
 def about(request):
   return render(request, "about.html")
@@ -84,4 +117,58 @@ def eliminar_comentario(request, comentario_id):
         return redirect('post_detalle', id=comentario.post.id)
     return render(request, 'eliminar_comentario.html', {'comentario': comentario})
 
+def _es_colaborador(user):
+    return user.is_authenticated and (user.is_superuser or user.groups.filter(name='Colaborador').exists())
 
+def _autor_para(user):
+    nombre = user.get_full_name() or user.username
+    email = user.email or f'{user.username}@example.com'
+    autor, _ = Autor.objects.get_or_create(user=user, defaults={'nombre': nombre, 'email': email})
+    return autor
+
+@login_required
+def post_crear(request):
+    if not _es_colaborador(request.user):
+        messages.error(request, 'No tenés permisos para crear artículos.')
+        return redirect('posts')
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.autor = _autor_para(request.user)
+            post.fch_publicacion = timezone.now()
+            post.save()
+            form.save_m2m()
+            messages.success(request, 'Artículo creado correctamente.')
+            return redirect('posts')
+    else:
+        form = PostForm()
+    return render(request, 'blog/post_form.html', {'form': form, 'titulo': 'Nuevo artículo'})
+
+@login_required
+def post_editar(request, id):
+    if not _es_colaborador(request.user):
+        messages.error(request, 'No tenés permisos para editar artículos.')
+        return redirect('posts')
+    post = get_object_or_404(Post, pk=id)
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Artículo actualizado correctamente.')
+            return redirect('posts')
+    else:
+        form = PostForm(instance=post)
+    return render(request, 'blog/post_form.html', {'form': form, 'titulo': 'Editar artículo'})
+
+@login_required
+def post_eliminar(request, id):
+    if not _es_colaborador(request.user):
+        messages.error(request, 'No tenés permisos para eliminar artículos.')
+        return redirect('posts')
+    post = get_object_or_404(Post, pk=id)
+    if request.method == 'POST':
+        post.delete()
+        messages.success(request, 'Artículo eliminado.')
+        return redirect('posts')
+    return render(request, 'blog/post_confirm_delete.html', {'post': post})
