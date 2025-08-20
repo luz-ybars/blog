@@ -39,49 +39,81 @@
                 {% load colab_tags %}
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                   {% if user.is_authenticated %}
+                    <!-- Botón Admin solo para superusuarios -->
+                    {% if user.is_superuser %}
+                    <li class="nav-item">
+                      <a class="nav-link text-warning" href="/admin/" target="_blank" title="Administración de Django">
+                        <i class="fas fa-cog me-1"></i>Admin
+                      </a>
+                    </li>
+                    {% endif %}
+                    
+                    <!-- Menú Colaborador -->
                     {% if user|es_colaborador %}
                     <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Colaborador
+                        <i class="fas fa-edit me-1"></i>Colaborador
                       </a>
                       <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{% url 'post_crear' %}">Nuevo artículo</a></li>
-                        <li><a class="dropdown-item" href="{% url 'posts' %}">Ver artículos</a></li>
+                        <li><a class="dropdown-item" href="{% url 'post_crear' %}">
+                          <i class="fas fa-plus me-2"></i>Nuevo artículo
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'posts' %}">
+                          <i class="fas fa-list me-2"></i>Ver artículos
+                        </a></li>
                       </ul>
                     </li>
                     {% endif %}
-                    <li class="nav-item">
-                      <a class="nav-link" href="#">{{ user.username }}</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#" onclick="confirmarLogout()">Cerrar sesión</a>
+                    
+                    <!-- Usuario logueado -->
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user me-1"></i>{{ user.username }}
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">
+                          <i class="fas fa-user-circle me-2"></i>Mi Perfil
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" onclick="confirmarLogout()">
+                          <i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión
+                        </a></li>
+                      </ul>
                     </li>
                   {% else %}
                     <li class="nav-item">
-                      <a class="nav-link" href="{% url 'auth:login' %}">Iniciar sesión</a>
+                      <a class="nav-link" href="{% url 'auth:login' %}">
+                        <i class="fas fa-sign-in-alt me-1"></i>Iniciar sesión
+                      </a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="{% url 'auth:registro' %}">Registrarse</a>
+                      <a class="nav-link" href="{% url 'auth:registro' %}">
+                        <i class="fas fa-user-plus me-1"></i>Registrarse
+                      </a>
                     </li>
                   {% endif %}
                 </ul>
               </div>
             </div>
-          </nav>
-  </header>
-  <div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
-                </ul>
-            </div>
-        </div>
     </nav>
 
+    <!-- Toast container -->
+    <div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
+
+    <!-- Hero Section (para páginas que lo necesiten) -->
+    {% block hero %}
+    {% endblock %}
+
     <!-- Contenido dinámico de la página -->
-    <main class="flex-shrink-0 py-4">
-        <div class="container">
+    <main class="flex-shrink-0">
+        <!-- Contenido con container para páginas normales -->
+        {% block contenido_container %}
+        <div class="container py-4">
             {% block contenido %}
             <!-- El contenido específico de cada página se insertará aquí -->
             {% endblock %}
         </div>
+        {% endblock %}
     </main>
 
     <!-- Pie de página -->

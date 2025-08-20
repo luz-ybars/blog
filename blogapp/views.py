@@ -9,8 +9,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 # Create your views here.
 def home(request):
-  posts=Post.objects.all().order_by('fch_publicacion')
-  return render(request, "index.html",{'posts':posts} )
+    # Mostrar solo los 6 posts más recientes en la página de inicio
+    posts = Post.objects.all().order_by('-fch_publicacion')[:6]
+    return render(request, "index.html", {'posts': posts})
 
 def posts(request):
     # Obtener todos los posts inicialmente

@@ -71,3 +71,143 @@ body {
 .chat p {
   font-style: italic;
 }
+
+/* Estilos para la página de inicio mejorada */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6));
+  z-index: 1;
+}
+
+.hero-section .position-relative {
+  z-index: 2;
+}
+
+/* Animaciones suaves */
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+/* Botones mejorados */
+.btn-primary {
+  background: linear-gradient(45deg, #0d6efd, #0b5ed7);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(45deg, #0b5ed7, #0a58ca);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+}
+
+/* Iconos musicales con animación */
+.fas.fa-music, .fas.fa-guitar, .fas.fa-microphone, .fas.fa-violin {
+  transition: transform 0.3s ease;
+}
+
+.card:hover .fas.fa-music, 
+.card:hover .fas.fa-guitar, 
+.card:hover .fas.fa-microphone, 
+.card:hover .fas.fa-violin {
+  transform: scale(1.1);
+}
+
+/* Text shadow para mejor legibilidad */
+.text-shadow {
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+}
+
+/* Responsive hero text */
+@media (max-width: 768px) {
+  .hero-section {
+    height: 60vh !important;
+    min-height: 400px !important;
+  }
+  
+  .hero-section .display-4 {
+    font-size: 2rem !important;
+  }
+  
+  .hero-section .fs-4 {
+    font-size: 1.1rem !important;
+  }
+}
+
+/* Asegurar que no haya espacios en blanco */
+.container-fluid {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Para páginas con hero, remover padding del main */
+body:has(.hero-section) main {
+  padding-top: 0 !important;
+}
+
+/* Estilos para botones de redes sociales */
+.btn.rounded-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.btn.rounded-circle:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Colores específicos para redes sociales */
+.btn-outline-primary:hover {
+  background-color: #1877f2;
+  border-color: #1877f2;
+}
+
+.btn-outline-danger:hover {
+  background-color: #e4405f;
+  border-color: #e4405f;
+}
+
+.btn-outline-success:hover {
+  background-color: #1db954;
+  border-color: #1db954;
+}
+
+/* Animación para badges */
+.badge {
+  transition: transform 0.2s ease;
+}
+
+.badge:hover {
+  transform: scale(1.1);
+}
+
+/* Mejoras para formularios */
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+}

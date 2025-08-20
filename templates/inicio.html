@@ -2,44 +2,13 @@
 {% load static %}
 
 {% block contenido %}
-<!-- Hero -->
-<section class="hero">
-  <h2>Bienvenidos al blog donde la música nunca se detiene</h2>
-  <p>Explorá géneros, descubrí artistas y compartí tu pasión con otros fanáticos.</p>
-</section>
-
-<!-- Secciones -->
-<section class="container">
-  <div class="card">
-    <h3>🎸 Tipos de Música</h3>
-    <p>Rock, pop, rap, electrónica, cumbia y más.</p>
-  </div>
-  <div class="card">
-    <h3>🧑‍🎤 Artistas</h3>
-    <p>Biografías, discografía y entrevistas exclusivas.</p>
-  </div>
-  <div class="card">
-    <h3>🆕 Novedades</h3>
-    <p>Lanzamientos recientes, festivales y noticias del mundo musical.</p>
-  </div>
-  
-  <div class="card">
-    <h3>🎫 Entradas</h3>
-    <p>Conseguí acceso a conciertos y festivales antes que nadie.</p>
-  </div>
-</section>
-
-<!-- Extras -->
-<section class="extras">
-  <h2>💬 Zona de fans</h2>
-  <p>Foros y chats por tipo de artista. Compartí, opiná y conocé a otros fans.</p>
-</section>
-
-<!-- Chat General -->
-<section class="chat">
-  <h2>📢 Chat General</h2>
-  <p>Un espacio libre para hablar de música con la comunidad.</p>
-</section>
+<!-- Página de inicio alternativa - No se usa actualmente -->
+<!-- El contenido principal está en index.html -->
+<div class="container py-5 text-center">
+    <h1>Esta página no se está utilizando</h1>
+    <p>El contenido principal está en <code>index.html</code></p>
+    <a href="{% url 'home' %}" class="btn btn-primary">Ir al Inicio</a>
+</div>
 {% endblock %}
 
 
