@@ -1,9 +1,214 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block contenido %}
-<div class="container py-4">
-  <h1>Acerca de</h1>
-  <p>Este es un proyecto del Informatorio. Blog musical con artículos, artistas, eventos y novedades.</p>
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6">
+            <h1 class="display-4 text-primary mb-3">Acerca de SoundWave</h1>
+            <p class="lead text-muted">Tu destino digital para descubrir, explorar y conectar con el mundo de la música.</p>
+        </div>
+        <div class="col-lg-6 text-center">
+            <div class="bg-dark rounded p-4 d-inline-block">
+                <img src="{% static 'css/images/blog_logo.png' %}" alt="SoundWave Logo" class="img-fluid" style="max-height: 250px;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Propósito del Blog -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h3 text-primary mb-3">
+                        <i class="fas fa-music me-2"></i>Nuestro Propósito
+                    </h2>
+                    <p class="mb-3">
+                        <strong>SoundWave</strong> es mucho más que un blog musical. Somos una plataforma dedicada a 
+                        celebrar la diversidad sonora que nos rodea, desde los géneros más tradicionales hasta las 
+                        tendencias más innovadoras del panorama musical actual.
+                    </p>
+                    <p class="mb-3">
+                        Nuestro objetivo es crear un espacio donde los amantes de la música puedan:
+                    </p>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Descubrir nuevos artistas y géneros musicales</li>
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Mantenerse informados sobre eventos y conciertos</li>
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Leer reseñas y análisis profundos de álbumes</li>
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Conectar con una comunidad apasionada por la música</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Galería de Imágenes -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="h3 text-primary mb-4 text-center">Géneros Musicales que Exploramos</h2>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <img src="{% static 'css/images/guitarra.jpg' %}" class="card-img-top" alt="Guitarra" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Rock Nacional & Folklore</h5>
+                    <p class="card-text small text-muted">Desde el rock argentino hasta nuestras raíces folklóricas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <img src="{% static 'css/images/saxo.jpg' %}" class="card-img-top" alt="Saxofón" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Tango & Música Clásica</h5>
+                    <p class="card-text small text-muted">La elegancia del tango y la sofisticación clásica</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <img src="{% static 'css/images/tocaDisco.jpg' %}" class="card-img-top" alt="Tocadiscos" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Urbano & Electrónica</h5>
+                    <p class="card-text small text-muted">Trap, Reggaeton, Cumbia, Pop y Música Electrónica</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Categorías Musicales -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h3 text-primary mb-4 text-center">
+                        <i class="fas fa-list-ul me-2"></i>Nuestras Categorías Musicales
+                    </h2>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-music text-primary me-3"></i>
+                                <span class="fw-bold">Música Electrónica</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-music text-primary me-3"></i>
+                                <span class="fw-bold">Música Clásica</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-music text-primary me-3"></i>
+                                <span class="fw-bold">Trap</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-music text-primary me-3"></i>
+                                <span class="fw-bold">Reggaeton</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-music text-primary me-3"></i>
+                                <span class="fw-bold">Cuarteto</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-music text-primary me-3"></i>
+                                <span class="fw-bold">Tango</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-music text-primary me-3"></i>
+                                <span class="fw-bold">Folklore</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-music text-primary me-3"></i>
+                                <span class="fw-bold">Cumbia</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-music text-primary me-3"></i>
+                                <span class="fw-bold">Pop</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-music text-primary me-3"></i>
+                                <span class="fw-bold">Rock Nacional</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center text-muted mt-3 mb-0">
+                        <small>Cada categoría incluye artículos especializados, reseñas y las últimas novedades del género</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información del Proyecto -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm bg-light">
+                <div class="card-body p-4">
+                    <h2 class="h3 text-primary mb-3">
+                        <i class="fas fa-graduation-cap me-2"></i>Proyecto Educativo
+                    </h2>
+                    <p class="mb-3">
+                        SoundWave es un proyecto desarrollado como parte del programa del 
+                        <strong>Informatorio Chaco 2024</strong>, en la etapa de Desarrollo Web con Python y Django.
+                    </p>
+                    <p class="mb-0">
+                        Este blog representa la culminación de nuestro aprendizaje en tecnologías web modernas, 
+                        combinando el poder de Django como framework backend con un diseño frontend responsivo 
+                        y una experiencia de usuario intuitiva.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Equipo de Desarrollo -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <h2 class="h3 text-primary mb-3">
+                                <i class="fas fa-users me-2"></i>Conoce al Equipo: OpenDevs
+                            </h2>
+                            <p class="mb-3">
+                                Somos <strong>OpenDevs</strong>, un equipo de desarrolladores apasionados por la tecnología 
+                                y la música. Nuestro grupo está formado por estudiantes comprometidos con el aprendizaje 
+                                continuo y la creación de soluciones web innovadoras.
+                            </p>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h5 class="text-secondary">Nuestra Filosofía</h5>
+                                    <ul class="list-unstyled small">
+                                        <li><i class="fas fa-code text-primary me-2"></i>Código limpio y mantenible</li>
+                                        <li><i class="fas fa-lightbulb text-warning me-2"></i>Innovación constante</li>
+                                        <li><i class="fas fa-handshake text-success me-2"></i>Colaboración efectiva</li>
+                                    </ul>
+                                </div>
+                                <div class="col-sm-6">
+                                    <h5 class="text-secondary">Tecnologías</h5>
+                                    <ul class="list-unstyled small">
+                                        <li><i class="fab fa-python text-info me-2"></i>Python & Django</li>
+                                        <li><i class="fab fa-html5 text-danger me-2"></i>HTML5 & CSS3</li>
+                                        <li><i class="fab fa-js-square text-warning me-2"></i>JavaScript & Bootstrap</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 text-center">
+                            <img src="{% static 'css/images/logo_equipo.png' %}" alt="OpenDevs Team Logo" class="img-fluid rounded-circle shadow" style="max-height: 200px;">
+                            <h4 class="mt-3 text-primary">OpenDevs</h4>
+                            <p class="text-muted small">Desarrolladores del futuro</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Agregar FontAwesome para los iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 {% endblock %}
 
 

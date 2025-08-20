@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from .models import Post, Comentario, Autor
+from .models import Post, Comentario, Autor, Categoria
 from .forms import ComentarioForm, ContactoForm, PostForm
 from django.contrib import messages
 from django.core.mail import send_mail
@@ -13,8 +13,39 @@ def home(request):
   return render(request, "index.html",{'posts':posts} )
 
 def posts(request):
-  posts=Post.objects.all().order_by('fch_publicacion')
-  return render(request, "posts.html",{'posts':posts})
+    # Obtener todos los posts inicialmente
+    posts = Post.objects.all()
+    
+    # Obtener todas las categorías para el filtro
+    categorias = Categoria.objects.all()
+    
+    # Filtrar por categoría si se especifica
+    categoria_id = request.GET.get('categoria')
+    if categoria_id:
+        posts = posts.filter(categorias__id=categoria_id)
+    
+    # Filtrar por orden
+    orden = request.GET.get('orden', 'fecha_desc')  # Por defecto más recientes primero
+    
+    if orden == 'fecha_asc':
+        posts = posts.order_by('fch_publicacion')
+    elif orden == 'fecha_desc':
+        posts = posts.order_by('-fch_publicacion')
+    elif orden == 'titulo_asc':
+        posts = posts.order_by('titulo')
+    elif orden == 'titulo_desc':
+        posts = posts.order_by('-titulo')
+    else:
+        posts = posts.order_by('-fch_publicacion')
+    
+    context = {
+        'posts': posts,
+        'categorias': categorias,
+        'categoria_seleccionada': categoria_id,
+        'orden_seleccionado': orden
+    }
+    
+    return render(request, "blog/posts.html", context)
 
 def about(request):
   return render(request, "about.html")
