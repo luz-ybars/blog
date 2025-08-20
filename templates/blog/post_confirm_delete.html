@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block contenido %}
+<div class="container py-4">
+  <h1 class="mb-4">Eliminar artículo</h1>
+  <p>¿Confirmás eliminar el artículo "<strong>{{ post.titulo }}</strong>"?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a href="{% url 'posts' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}
+

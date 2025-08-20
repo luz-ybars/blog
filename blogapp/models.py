@@ -23,6 +23,7 @@ class Post(models.Model):
   contenido = models.TextField()
   fch_creacion = models.DateTimeField(default=timezone.now)
   fch_publicacion = models.DateTimeField(blank=True, null=True)
+  imagen = models.ImageField(upload_to='posts/', blank=True, null=True)
 
   categorias = models.ManyToManyField(Categoria, related_name="posts", blank=True)
 

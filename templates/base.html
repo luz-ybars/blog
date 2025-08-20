@@ -30,8 +30,20 @@
                     </li>
                 </ul>
                 <!-- Enlaces de autenticación -->
+                {% load colab_tags %}
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                   {% if user.is_authenticated %}
+                    {% if user|es_colaborador %}
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Colaborador
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'post_crear' %}">Nuevo artículo</a></li>
+                        <li><a class="dropdown-item" href="{% url 'posts' %}">Ver artículos</a></li>
+                      </ul>
+                    </li>
+                    {% endif %}
                     <li class="nav-item">
                       <a class="nav-link" href="#">{{ user.username }}</a>
                     </li>

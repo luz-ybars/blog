@@ -14,21 +14,30 @@ from pathlib import Path
 import os
 import sys
 from os import getenv
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 #BASE_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Cargar variables desde .env si existe en la raíz o en la carpeta myblog
+ENV_PATH_ROOT = os.path.join(BASE_DIR, '.env')
+ENV_PATH_LOCAL = os.path.join(os.path.dirname(__file__), '.env')
+if os.path.exists(ENV_PATH_ROOT):
+    load_dotenv(ENV_PATH_ROOT, override=False)
+if os.path.exists(ENV_PATH_LOCAL):
+    load_dotenv(ENV_PATH_LOCAL, override=False)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4p*@ta$-ah*1qfghh)9799f0+afa=h9akk%iaao+&2s@q^4-z5'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-4p*@ta$-ah*1qfghh)9799f0+afa=h9akk%iaao+&2s@q^4-z5')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', '').split(',') if h.strip()] or []
 
 
 # Application definition
@@ -132,7 +141,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 
-MEDIA = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 # Email (desarrollo)
@@ -151,3 +160,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Crispy Forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# Código de invitación para colaboradores
+COLAB_INVITE_CODE = os.getenv('COLAB_INVITE_CODE', 'INVITE123')

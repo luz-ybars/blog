@@ -1,20 +1,41 @@
 {% extends "base.html" %}
+{% load colab_tags %}
 {% block contenido %}
 <div class="container py-4">
-  <h1 class="mb-4">Artículos</h1>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0">Artículos</h1>
+    {% if user|es_colaborador %}
+      <a class="btn btn-primary" href="{% url 'post_crear' %}">Nuevo artículo</a>
+    {% endif %}
+  </div>
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
     {% for post in posts%}
       <div class="col">
           <div class="card shadow-sm">
+            {% if post.imagen %}
+            <img src="{{ post.imagen.url }}" class="card-img-top" style="height:225px;object-fit:cover;" alt="{{ post.titulo }}">
+            {% else %}
             <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-            <div class="card-body">
-              <h5 class="card-title">{{ post.titulo }}</h5>
-              <p class="card-text">{{ post.contenido|truncatechars:120 }}</p>
-              <p>{{post.autor}}</p>
+            {% endif %}
+                      <div class="card-body">
+            <h5 class="card-title">{{ post.titulo }}</h5>
+            <p class="card-text">{{ post.contenido|truncatechars:120 }}</p>
+            <p><small class="text-muted">Por {{post.autor}}</small></p>
+            {% if post.categorias.all %}
+            <div class="mb-2">
+              {% for categoria in post.categorias.all %}
+                <span class="badge bg-secondary me-1">{{ categoria.nombre }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
+                  <a href="{% url 'post_detalle' id=post.id %}" class="btn btn-sm btn-outline-secondary">Ver</a>
                   <a href="{% url 'post_detalle' id=post.id %}" class="btn btn-sm btn-outline-secondary">Comentar</a>
-                  <a href="{% url 'post_detalle' id=post.id %}" class="btn btn-sm btn-outline-secondary">Ver más</a>
+                  {% if user|es_colaborador %}
+                  <a href="{% url 'post_editar' post.id %}" class="btn btn-sm btn-warning">Editar</a>
+                  <a href="{% url 'post_eliminar' post.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                  {% endif %}
                 </div>
                 <small class="text-muted">{{ post.fch_publicacion|date:"d/m/Y H:i" }}</small>
               </div>

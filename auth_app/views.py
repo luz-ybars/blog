@@ -21,6 +21,8 @@ def registro(request):
                 if invite_code and invite_target and invite_code == invite_target:
                     group, _ = Group.objects.get_or_create(name="Colaborador")
                 else:
+                    if invite_code and invite_code != invite_target:
+                        messages.warning(request, 'Código de invitación inválido. Se te registró como Miembro.')
                     group, _ = Group.objects.get_or_create(name="Miembro")
                 user.groups.add(group)
                 login(request, user)
