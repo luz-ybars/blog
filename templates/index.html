@@ -1,32 +1,162 @@
 {% extends "base.html" %}
-{% block contenido %}
-<div class="container py-4">
-  <div class="row">
-    {% for post in posts %}
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title">{{ post.titulo }}</h5>
-            <p class="card-text">{{ post.contenido|truncatechars:140 }}</p>
-            <a href="{% url 'post_detalle' id=post.id %}" class="btn btn-primary btn-sm">Leer más</a>
-          </div>
-          <div class="card-footer text-muted">
-            Publicado: {{ post.fch_publicacion|date:"d/m/Y H:i" }}
-          </div>
+{% load static %}
+
+{% block hero %}
+<!-- Hero Section Full Width -->
+<section class="hero-section position-relative" style="height: 70vh; min-height: 500px;">
+    <div class="position-absolute top-0 start-0 w-100 h-100" 
+         style="background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('{% static 'css/images/portada.png' %}'); 
+                background-size: cover; 
+                background-position: center; 
+                background-repeat: no-repeat;">
+    </div>
+    <div class="position-relative d-flex align-items-center justify-content-center h-100 text-white text-center">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <p class="display-4 fw-bold mb-4 text-shadow">
+                        "La música es el lenguaje universal del alma"
+                    </p>
+                    <p class="fs-4 mb-5 text-shadow">
+                        Descubre, explora y conecta con el mundo de la música
+                    </p>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a href="{% url 'posts' %}" class="btn btn-primary btn-lg px-4">
+                            <i class="fas fa-newspaper me-2"></i>Explorar Artículos
+                        </a>
+                        <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg px-4">
+                            <i class="fas fa-info-circle me-2"></i>Conocer Más
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    {% empty %}
-      <div class="col-12"><p>No hay artículos todavía.</p></div>
-    {% endfor %}
-  </div>
-  <div class="text-center py-3">
-    <a href="{% url 'posts' %}" class="btn btn-outline-secondary">Ver todos los artículos</a>
-  </div>
-  
-  <section class="mt-5">
-    <h2>Acerca de este blog</h2>
-    <p>Somos un blog musical creado en Informatorio. Encontrá artículos, artistas y novedades.</p>
-  </section>
-</div>
+    </div>
+</section>
 {% endblock %}
- 
+
+{% block contenido %}
+
+<!-- Sección de Géneros Musicales -->
+<section class="container py-5">
+    <div class="text-center mb-5">
+        <h2 class="display-5 text-primary mb-3">Géneros que Exploramos</h2>
+        <p class="lead text-muted">Desde los clásicos hasta las tendencias más actuales</p>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 text-center">
+                <div class="card-body p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-guitar text-primary" style="font-size: 3rem;"></i>
+                    </div>
+                    <h4 class="card-title text-primary">Rock & Folklore</h4>
+                    <p class="card-text text-muted">Rock Nacional, Folklore argentino y todas sus variantes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 text-center">
+                <div class="card-body p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-microphone text-primary" style="font-size: 3rem;"></i>
+                    </div>
+                    <h4 class="card-title text-primary">Urbano & Pop</h4>
+                    <p class="card-text text-muted">Trap, Reggaeton, Pop, Cumbia y los ritmos más actuales</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 text-center">
+                <div class="card-body p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-violin text-primary" style="font-size: 3rem;"></i>
+                    </div>
+                    <h4 class="card-title text-primary">Clásico & Tango</h4>
+                    <p class="card-text text-muted">Música Clásica, Tango, Cuarteto y la elegancia musical</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Artículos Recientes -->
+<section class="container mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary mb-0">
+            <i class="fas fa-newspaper me-2"></i>Artículos Recientes
+        </h2>
+        <a href="{% url 'posts' %}" class="btn btn-outline-primary">
+            Ver todos <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+    </div>
+    
+    {% if posts %}
+    <div class="row g-4">
+        {% for post in posts %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0">
+                {% if post.imagen %}
+                <img src="{{ post.imagen.url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ post.titulo }}">
+                {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="fas fa-music text-muted" style="font-size: 3rem;"></i>
+                </div>
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ post.titulo }}</h5>
+                    <p class="card-text flex-grow-1">{{ post.contenido|truncatechars:120 }}</p>
+                    {% if post.categorias.all %}
+                    <div class="mb-2">
+                        {% for categoria in post.categorias.all %}
+                        <span class="badge bg-secondary me-1">{{ categoria.nombre }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <a href="{% url 'post_detalle' id=post.id %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-eye me-1"></i>Leer más
+                        </a>
+                        <small class="text-muted">{{ post.fch_publicacion|date:"d/m/Y" }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <i class="fas fa-newspaper text-muted" style="font-size: 4rem;"></i>
+        </div>
+        <h3 class="text-muted mb-3">Próximamente...</h3>
+        <p class="text-muted">Estamos preparando contenido increíble para vos.</p>
+    </div>
+    {% endif %}
+</section>
+
+<!-- Call to Action -->
+<section class="bg-primary text-white py-5">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="display-6 mb-3">¿Listo para sumergirte en la música?</h2>
+                <p class="lead mb-4">
+                    Únete a nuestra comunidad y descubre un mundo de sonidos, artistas y experiencias musicales únicas.
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'auth:registro' %}" class="btn btn-light btn-lg px-4">
+                        <i class="fas fa-user-plus me-2"></i>Registrarse
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'posts' %}" class="btn btn-outline-light btn-lg px-4">
+                        <i class="fas fa-headphones me-2"></i>Comenzar a Explorar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
