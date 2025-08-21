@@ -21,7 +21,7 @@ class PostForm(forms.ModelForm):
     categorias = forms.ModelMultipleChoiceField(
         queryset=Categoria.objects.all(),
         required=False,
-        widget=forms.SelectMultiple(attrs={'class': 'form-select'})
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'})
     )
 
     class Meta:

@@ -1,14 +1,65 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block contenido %}
-<div class="container py-4">
-  <h1 class="mb-4">{{ titulo }}</h1>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <button type="submit" class="btn btn-primary mt-3">Guardar</button>
-    <a href="{% url 'posts' %}" class="btn btn-secondary mt-3">Cancelar</a>
-  </form>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h1 class="display-4 text-primary mb-0 text-center">{{ titulo }}</h1>
+        </div>
+                <div class="card-body p-4">
+          <form method="post" enctype="multipart/form-data" class="post-form-container">
+            {% csrf_token %}
+            
+            <!-- Campos principales -->
+            <div class="row">
+              <div class="col-12">
+                {{ form.titulo|as_crispy_field }}
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-12">
+                {{ form.contenido|as_crispy_field }}
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-12">
+                {{ form.imagen|as_crispy_field }}
+              </div>
+            </div>
+            
+            <!-- Sección de categorías mejorada -->
+            <div class="categories-section">
+              <h6><i class="fas fa-tags me-2"></i>Selecciona las categorías</h6>
+              <div class="categories-grid">
+                {% for checkbox in form.categorias %}
+                <div class="category-checkbox">
+                  {{ checkbox.tag }}
+                  <label for="{{ checkbox.id_for_label }}">
+                    {{ checkbox.choice_label }}
+                  </label>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            
+            <!-- Botones de acción -->
+            <div class="d-flex gap-3 mt-4">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save me-2"></i>Guardar
+              </button>
+              <a href="{% url 'posts' %}" class="btn btn-secondary">
+                <i class="fas fa-times me-2"></i>Cancelar
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 {% endblock %}
 
