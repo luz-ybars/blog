@@ -101,7 +101,7 @@ WSGI_APPLICATION = 'myblog.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(os.path.dirname(BASE_DIR),'db_sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -142,10 +142,17 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+# Destino de collectstatic en producción
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
+# CSRF en producción: configurar el dominio si está presente
+CSRF_TRUSTED_ORIGINS = [
+    f"https://{os.getenv('PA_DOMAIN', '').strip()}"
+] if os.getenv('PA_DOMAIN') else []
 
 # Email (desarrollo)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
